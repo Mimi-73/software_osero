@@ -18,9 +18,10 @@ class Game{
 
     public:
         //操作
-        //実行する
         Game();
-        
+        //実行する
+        void play();
+
     private:
         //パス判定
         bool pass;
