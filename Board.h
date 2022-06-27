@@ -3,12 +3,15 @@
 
 #include "Stone.h"
 
+#define ROW 8  //行
+#define COLUMN 8  //列
+
 class Board{
 
     private:
         //属性
         //盤
-        int Stone[8][8];
+        int Stone[ROW][COLUMN];  //0:黒 1:白 2:空
         //白石の数
         int white;
         //黒石の数
