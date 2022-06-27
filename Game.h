@@ -3,7 +3,7 @@
 
 #include "Board.h"
 
-class Game{
+class Game{  //白
 
     private:
         //盤

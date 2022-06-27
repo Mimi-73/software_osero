@@ -1,7 +1,7 @@
 #ifndef _STONE_H_
 #define _STONE_H_
 
-class Stone{
+class Stone{  //白
 
     private:
         //属性
