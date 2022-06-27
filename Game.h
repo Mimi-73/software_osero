@@ -17,7 +17,7 @@ class Game{  //ほわい
         bool flag;
 
     public:
-        //操作
+        //コンストラクタ
         Game();
         //実行する
         void play();
