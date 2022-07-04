@@ -5,7 +5,6 @@
 Game::Game(){
     player=true; //先手:true 後手:false
     flag=false; //trueになったときゲーム終了
-    pass=false; //trueの時pass
 }
 
 //ゲーム全体の流れをここに書き込む
