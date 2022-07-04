@@ -24,7 +24,7 @@ class Game{  //白
 
     private:
         //パス判定
-        bool pass;
+        bool pass();
         //プレイヤー交代
         void ChangePlayer(bool player);
         //勝者を表示する
