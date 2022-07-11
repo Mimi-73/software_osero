@@ -21,7 +21,7 @@ Board::Board()
 
 void Board::ShowBoard()
 {
-    printf("   a   b   c   d   e   f   g   h\n");
+    printf("   1   2   3   4   5   6   7   8\n");
     
     for(int i = 0; i < ROW; i++){
         printf(" +---+---+---+---+---+---+---+---+\n");
@@ -61,36 +61,10 @@ void Board::StonePlace(bool Player)
         scanf(%c, inColumn);
 
         Column = (int)inColumn - 1;
+        Row = (int)inRow - 1;
 
-        switch(cinRow){
-            case "a":
-                Row = 0;
-                break;
-            case "b":
-                Row = 1;
-                break;
-            case "c":
-                Row = 2;
-                break;
-            case "d":
-                Row = 3;
-                break;
-            case "e":
-                Row = 4;
-                break;
-            case "f":
-                Row = 5;
-                break;
-            case "g";
-                Row = 6;
-                break;
-            case "h":
-                Row = 7;
-                break;
-            default:
-                Row = 8;
-                break;
-        }
+        coodinate[0] = Row;
+        coodinate[1] = Column;
 
         if( (0 <= Row < 8) && (0 <= Column < 8) ){
             flag1 = 1;
@@ -111,4 +85,9 @@ void Board::StonePlace(bool Player)
             printf("不正な入力です\n");
         }
     }
+}
+
+bool Board::isSandwichStone(bool player)
+{
+
 }

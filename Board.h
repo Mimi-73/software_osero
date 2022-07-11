@@ -26,8 +26,6 @@ class Board{
         void ShowBoard();
         //石の配置  //南
         void StonePlace(bool player);
-        //石の配置可マス存在判定
-        bool CanSetStone(bool player);
         //挟石有無判定  //原
         bool isSandwichStone(bool player);
         //ひっくり返す石の指定　　原
