@@ -1,6 +1,6 @@
 # software_osero
 
-whyty's token   ( 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 )
+whyty's token   ( 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 )
 
 Mimi's token    ( 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 )
 
