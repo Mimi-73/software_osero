@@ -55,13 +55,10 @@ void Board::StonePlace(bool Player)
     int flag1, flag2, wflag = 1;
 
     while(wflag){
-        printf("行(英文字)を入力 : ");
-        scanf(%c, inRow);
-        printf("列(数字)を入力　 : ");
-        scanf(%c, inColumn);
-
-        Column = (int)inColumn - 1;
-        Row = (int)inRow - 1;
+        printf("行を入力 : ");
+        scanf("%d", &Row);
+        printf("列を入力　 : ");
+        scanf("%d", &Column);
 
         coodinate[0] = Row;
         coodinate[1] = Column;
