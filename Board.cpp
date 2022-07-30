@@ -60,8 +60,8 @@ void Board::StonePlace(bool Player)
         printf("列を入力　 : ");
         scanf("%d", &Column);
 
-        coodinate[0] = Row;
-        coodinate[1] = Column;
+        coodinate[0] = Row + 1;
+        coodinate[1] = Column + 1;
 
         if( (0 <= Row < 8) && (0 <= Column < 8) ){
             flag1 = 1;
