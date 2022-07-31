@@ -11,6 +11,10 @@ class Stone{  //白
     public:
         //操作
         Stone();
+        //settor
+        void setStone(bool Color);
+        //gettor
+        bool getStone();
         //ひっくり返す
         void UpSet();
 

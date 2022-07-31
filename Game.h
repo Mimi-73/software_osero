@@ -10,11 +10,13 @@ class Game{  //ほわい
         Board board;
     
     public:
-        //属性
+        
         //現在のプレイヤー
         bool player;
         //ゲーム終了フラグ
         bool flag;
+        //前回のターンでパスが行われていればtrueになる
+        bool pass;
 
     public:
         //コンストラクタ
