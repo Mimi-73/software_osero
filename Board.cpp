@@ -9,14 +9,14 @@ Board::Board()
 {
     for(int i = 0; i < ROW; i++){
         for(int j = 0; j < COLUMN; j++){
-            Stone[i][j] = 2;
+            stone[i][j].setStone(NULL);
         }
     }
-
-    Stone[3][3] = Stone[4][4] = 1;
-    Stone[3][4] = Stone[4][3] = 0;
-
-    white = black = 2;
+    
+    stone[3][3].setStone(true);
+    stone[4][4].setStone(true);
+    stone[3][4].setStone(false);
+    stone[4][3].setStone(false);
 }
 
 void Board::ShowBoard()
@@ -29,13 +29,13 @@ void Board::ShowBoard()
         
         for(int j = 0; j < COLUMN; j++){
             printf("|");
-            switch (Stone[i][j])
+            switch (stone[i][j].getStone())
             {
-            case 0:
+            case false:
                 printf(" ● ");
                 break;
 
-            case 1:
+            case true:
                 printf(" ○ ");
             
             default:
@@ -51,7 +51,7 @@ void Board::ShowBoard()
 void Board::StonePlace(bool Player)
 {
     char cinRow, cinColumn;
-    int Row, Column, coodinate[2];
+    int Row, Column;
     int flag1, flag2, wflag = 1;
 
     while(wflag){
@@ -60,10 +60,7 @@ void Board::StonePlace(bool Player)
         printf("列を入力　 : ");
         scanf("%d", &Column);
 
-        coodinate[0] = Row + 1;
-        coodinate[1] = Column + 1;
-
-        if( (0 <= Row < 8) && (0 <= Column < 8) ){
+        if( (1 <= Row <= 8) && (1 <= Column <= 8) ){
             flag1 = 1;
         } else {
             flag1 = 0;
@@ -76,7 +73,7 @@ void Board::StonePlace(bool Player)
         }
 
         if( (flag1 == 1) && (flag2 == 1) ){
-            //Board::UpSetStone(coodinate);
+            stone[Row - 1][Column - 1].UpSet();
             wflag = 0;
         } else {
             printf("不正な入力です\n");
@@ -86,5 +83,4 @@ void Board::StonePlace(bool Player)
 
 bool Board::isSandwichStone(bool player)
 {
-
 }

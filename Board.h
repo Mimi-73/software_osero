@@ -11,7 +11,7 @@ class Board{
     private:
         //属性
         //盤
-        int Stone[ROW][COLUMN];  //0:黒 1:白 2:空
+        Stone stone[ROW][COLUMN];  //true:白 false:黒
         //白石の数
         int white;
         //黒石の数
