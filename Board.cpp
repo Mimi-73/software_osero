@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <cstdlib.h>
 #include "Board.h"
 #include "Stone.h"
 
@@ -602,4 +603,34 @@ void Board::SearchPoint(int Row, int Column, bool player)
 
 void Board::UpSetStone(int sPoint[2], int ePoint[2])
 {
+    int i=0,j=0,k=1,loop=0;
+    int def_a=0,def_b=0;
+
+    def_a=sPoint[0]-ePoint[0];
+    def_b=sPoint[1]-ePoint[1];
+
+    if(def_a==0){
+        loop=abs(def_b);
+    }else{
+        loop=abs(def_a);
+    }
+
+    if(def_a<0){
+        i=sPoint[0];
+    }else{
+        i=ePoint[0];
+    }
+
+    if(def_b<0){
+        j=sPoint[1];
+    }else{
+        j=ePoint[1];
+    }
+
+    while(k<loop){
+        stone[i][j].UpSet();
+        if(def_a!=0)i++;
+        if(def_b!=0)j++;
+        k++;
+    }
 }
