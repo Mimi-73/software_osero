@@ -28,6 +28,8 @@ class Board{
         void StonePlace(bool player);
         //挟石有無判定  //原
         bool isSandwichStone(bool player);
+        //周りの石の判定
+        void isRoundStone(bool *ok, int row, int column);
         
 };
 #endif
