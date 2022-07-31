@@ -30,6 +30,10 @@ class Board{
         bool isSandwichStone(bool player);
         //周りの石の判定
         void isRoundStone(bool *ok, int row, int column);
+        //ひっくり返す石の座標を調べる関数
+        void SearchPoint(int Row, int Column, bool player);
+        //ひっくり返す関数
+        void UpSetStone(int sPoint[2], int ePoint[2]);
         
 };
 #endif
