@@ -598,8 +598,8 @@ void Board::SearchPoint(int Row, int Column, bool player)
             l--;
         }
     }
-
 }
 
 void Board::UpSetStone(int sPoint[2], int ePoint[2])
-{}
+{
+}
