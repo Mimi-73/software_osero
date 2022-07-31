@@ -11,13 +11,22 @@ Game::Game(){
 
 //ゲーム全体の流れをここに書き込む
 void Game::play(){
+    while(!flag){
+        if(!Pass()){
+            board.ShowBoard();
+            board.StonePlace(player);
+        }
 
+        ChangePlayer(player);
+    }
 
+    ShowWinner();
 }
 
 bool Game::Pass(){
     //狭石有無判定で、挟める石がなければターン続行不可としてpass=trueとした上で返り値trueを返す
     if(!board.isSandwichStone(player)){
+        if(pass){flag = true;}
         pass=true;
         return true;
     }else{
@@ -32,7 +41,20 @@ void Game::ChangePlayer(bool player){
 }
 
 void Game::ShowWinner(){
-    //現在のプレイヤーを勝者として表示する
-    if(player==true) printf("勝者は PLAYER1 です");
-    else printf("勝者は PLAYER2 です");
+    int i, j;
+    int white = 0, black = 0;
+
+    for(i = 0; i < 8; i++){
+        for(j = 0; j < 8; j++){
+            if(board.getStoneOnBoard(i, j)){white += 1;} else {black += 1;}
+        }
+    }
+
+    if(white > black){
+        printf("白の勝ちです\n");
+    } else if(white < black){
+        printf("黒の勝ちです\n");
+    } else {
+        printf("引き分けです\n");
+    }
 }

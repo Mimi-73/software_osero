@@ -22,6 +22,7 @@ class Board{
     public:
         //操作
         Board();
+        bool getStoneOnBoard(int Row,int Column);
         //盤の状態表示  南
         void ShowBoard();
         //石の配置  //南
