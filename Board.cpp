@@ -76,7 +76,7 @@ void Board::StonePlace(bool Player)
         }
 
         if( (flag1 == 1) && (flag2 == 1) ){
-            Board::UpSetStone(coodinate);
+            //Board::UpSetStone(coodinate);
             wflag = 0;
         } else {
             printf("不正な入力です\n");

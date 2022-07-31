@@ -28,8 +28,6 @@ class Board{
         void StonePlace(bool player);
         //挟石有無判定  //原
         bool isSandwichStone(bool player);
-        //ひっくり返す石の指定　　原
-        void UpSetStone(int coodinate[2]);
         
 };
 #endif
