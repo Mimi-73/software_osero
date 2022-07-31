@@ -3,28 +3,30 @@
 
 #include "Board.h"
 
-class Game{  //白
+class Game{  //ほわい
 
     private:
         //盤
         Board board;
     
     public:
-        //属性
+        
         //現在のプレイヤー
         bool player;
         //ゲーム終了フラグ
         bool flag;
+        //前回のターンでパスが行われていればtrueになる
+        bool pass;
 
     public:
-        //操作
+        //コンストラクタ
         Game();
         //実行する
         void play();
 
     private:
         //パス判定
-        bool pass;
+        bool Pass();
         //プレイヤー交代
         void ChangePlayer(bool player);
         //勝者を表示する
