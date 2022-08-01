@@ -44,12 +44,17 @@ void Board::ShowBoard()
         for (int j = 0; j < COLUMN; j++)
         {
             printf("|");
-            if(isStone[i][j] == false){
+            if (isStone[i][j] == false)
+            {
                 printf("   ");
-            } else if(stone[i][j].getStone()){
-                printf(" ○ ");  //白
-            } else if(!stone[i][j].getStone()){
-                printf(" ● ");  //黒
+            }
+            else if (stone[i][j].getStone())
+            {
+                printf(" ○ "); //白
+            }
+            else if (!stone[i][j].getStone())
+            {
+                printf(" ● "); //黒
             }
         }
 
@@ -81,19 +86,21 @@ void Board::StonePlace(bool Player)
             flag1 = 0;
         }
 
-        if (canStone[Row][Column] == 1)
+        if (canStone[Row][Column])
         {
             flag2 = 1;
         }
         else
         {
+            printf("hfhgh\n");
             flag2 = 0;
         }
 
         if ((flag1 == 1) && (flag2 == 1))
         {
+            isStone[Row - 1][Column - 1] = true;
+            stone[Row - 1][Column - 1].setStone(Player);
             Board::SearchPoint(Row - 1, Column - 1, Player);
-            isStone[Row][Column] = true;
             wflag = 0;
         }
         else
@@ -125,17 +132,28 @@ bool Board::isSandwichStone(bool player)
             //上
             if (ok[0] == true)
             {
-                for (k = i + 2; k < ROW; k++)
+                k = i + 2;
+
+                if (k >= ROW)
                 {
-                    if (!isStone[k][j])
+                    flag[0] = false;
+                }
+                else
+                {
+                    while (k < ROW)
                     {
-                        flag[0] = false;
-                        break;
-                    }
-                    else if (stone[k][j].getStone() == player)
-                    {
-                        flag[0] = true;
-                        break;
+                        if (!isStone[k][j])
+                        {
+                            flag[0] = false;
+                            break;
+                        }
+                        else if (isStone[k][j] && stone[k][j].getStone() == player)
+                        {
+                            flag[0] = true;
+                            break;
+                        }
+
+                        k++;
                     }
                 }
             }
@@ -148,21 +166,30 @@ bool Board::isSandwichStone(bool player)
             {
                 k = i + 2; //行
                 l = j + 2; //列
-                while (k < ROW && l < COLUMN)
-                {
-                    if (!isStone[k][l])
-                    {
-                        flag[1] = false;
-                        break;
-                    }
-                    else if (stone[k][l].getStone() == player)
-                    {
-                        flag[1] = true;
-                        break;
-                    }
 
-                    k++;
-                    l++;
+                if (k >= ROW || l >= COLUMN)
+                {
+                    flag[1] = false;
+                }
+                else
+                {
+
+                    while (k < ROW && l < COLUMN)
+                    {
+                        if (!isStone[k][l])
+                        {
+                            flag[1] = false;
+                            break;
+                        }
+                        else if (isStone[k][l] && stone[k][l].getStone() == player)
+                        {
+                            flag[1] = true;
+                            break;
+                        }
+
+                        k++;
+                        l++;
+                    }
                 }
             }
             else
@@ -172,17 +199,28 @@ bool Board::isSandwichStone(bool player)
             //右
             if (ok[2] == true)
             {
-                for (k = j + 2; k < COLUMN; k++)
+                k = j + 2;
+
+                if (k >= COLUMN)
                 {
-                    if (!isStone[i][k])
+                    flag[2] = false;
+                }
+                else
+                {
+                    while (k < COLUMN)
                     {
-                        flag[2] = false;
-                        break;
-                    }
-                    else if (stone[i][k].getStone() == player)
-                    {
-                        flag[2] = true;
-                        break;
+                        if (!isStone[i][k])
+                        {
+                            flag[2] = false;
+                            break;
+                        }
+                        else if (isStone[i][k] && stone[i][k].getStone() == player)
+                        {
+                            flag[2] = true;
+                            break;
+                        }
+
+                        k++;
                     }
                 }
             }
@@ -195,21 +233,29 @@ bool Board::isSandwichStone(bool player)
             {
                 k = i - 2;
                 l = j + 2;
-                while (k >= 0 && l < COLUMN)
-                {
-                    if (!isStone[k][l])
-                    {
-                        flag[3] = false;
-                        break;
-                    }
-                    else if (stone[k][l].getStone() == player)
-                    {
-                        flag[3] = true;
-                        break;
-                    }
 
-                    k--;
-                    l++;
+                if (k < 0 || l >= COLUMN)
+                {
+                    flag[3] = false;
+                }
+                else
+                {
+                    while (k >= 0 && l < COLUMN)
+                    {
+                        if (!isStone[k][l])
+                        {
+                            flag[3] = false;
+                            break;
+                        }
+                        else if (isStone[k][l] && stone[k][l].getStone() == player)
+                        {
+                            flag[3] = true;
+                            break;
+                        }
+
+                        k--;
+                        l++;
+                    }
                 }
             }
             else
@@ -219,17 +265,28 @@ bool Board::isSandwichStone(bool player)
             //下
             if (ok[4] == true)
             {
-                for (k = i - 2; k >= 0; k--)
+                k = i - 2;
+
+                if (k < 0)
                 {
-                    if (!isStone[k][j])
+                    flag[4] = false;
+                }
+                else
+                {
+                    while (k >= 0)
                     {
-                        flag[4] = false;
-                        break;
-                    }
-                    else if (stone[k][j].getStone() == player)
-                    {
-                        flag[4] = true;
-                        break;
+                        if (!isStone[k][j])
+                        {
+                            flag[4] = false;
+                            break;
+                        }
+                        else if (isStone[k][j] && stone[k][j].getStone() == player)
+                        {
+                            flag[4] = true;
+                            break;
+                        }
+
+                        k--;
                     }
                 }
             }
@@ -242,21 +299,30 @@ bool Board::isSandwichStone(bool player)
             {
                 k = i - 2;
                 l = j - 2;
-                while (k >= 0 && l >= 0)
-                {
-                    if (!isStone[k][l])
-                    {
-                        flag[5] = false;
-                        break;
-                    }
-                    else if (stone[k][l].getStone() == player)
-                    {
-                        flag[5] = true;
-                        break;
-                    }
 
-                    k--;
-                    l--;
+                if (k < 0 || l < 0)
+                {
+                    flag[5] = false;
+                }
+                else
+                {
+
+                    while (k >= 0 && l >= 0)
+                    {
+                        if (!isStone[k][l])
+                        {
+                            flag[5] = false;
+                            break;
+                        }
+                        else if (isStone[k][l] && stone[k][l].getStone() == player)
+                        {
+                            flag[5] = true;
+                            break;
+                        }
+
+                        k--;
+                        l--;
+                    }
                 }
             }
             else
@@ -266,17 +332,28 @@ bool Board::isSandwichStone(bool player)
             //左
             if (ok[6] == true)
             {
-                for (k = j - 2; k >= 0; k--)
+                k = j - 2;
+
+                if (k < 0)
                 {
-                    if (!isStone[i][k])
+                    flag[6] = false;
+                }
+                else
+                {
+                    while (k >= 0)
                     {
-                        flag[6] = false;
-                        break;
-                    }
-                    else if (stone[i][k].getStone() == player)
-                    {
-                        flag[6] = true;
-                        break;
+                        if (!isStone[i][k])
+                        {
+                            flag[6] = false;
+                            break;
+                        }
+                        else if (isStone[i][k] && stone[i][k].getStone() == player)
+                        {
+                            flag[6] = true;
+                            break;
+                        }
+
+                        k--;
                     }
                 }
             }
@@ -289,21 +366,29 @@ bool Board::isSandwichStone(bool player)
             {
                 k = i + 2;
                 l = j - 2;
-                while (k < ROW && l >= 0)
-                {
-                    if (!isStone[k][l])
-                    {
-                        flag[7] = false;
-                        break;
-                    }
-                    else if (stone[k][l].getStone() == player)
-                    {
-                        flag[7] = true;
-                        break;
-                    }
 
-                    k++;
-                    l--;
+                if (k >= ROW || l < 0)
+                {
+                    flag[7] = false;
+                }
+                else
+                {
+                    while (k < ROW && l >= 0)
+                    {
+                        if (!isStone[k][l])
+                        {
+                            flag[7] = false;
+                            break;
+                        }
+                        else if (isStone[k][l] && stone[k][l].getStone() == player)
+                        {
+                            flag[7] = true;
+                            break;
+                        }
+
+                        k++;
+                        l--;
+                    }
                 }
             }
             else
@@ -311,12 +396,17 @@ bool Board::isSandwichStone(bool player)
                 flag[7] = false;
             }
 
-            if(flag[0] == true || flag[1] == true || flag[2] == true || flag[3] == true || flag[4] == true ||
-               flag[5] == true || flag[6] == true || flag[7] == true){
+            if (flag[0] || flag[1] || flag[2] || flag[3] || flag[4] || flag[5] || flag[6] || flag[7])
+            {
                 canStone[i][j] = true;
-            } else {canStone[i][j] = false;}
+                printf("行:%d  列:%d\n", i, j);
+            }
+            else
+            {
+                canStone[i][j] = false;
+            }
 
-            if (canStone[i][j] == true)
+            if (canStone[i][j])
             {
                 canPlaceStone += 1;
             }
@@ -469,182 +559,221 @@ void Board::isRoundStone(bool *ok, int i, int j, bool player)
 
 void Board::SearchPoint(int Row, int Column, bool player)
 {
-    int i, j, k, l;
+    int i, j, k, l, count = 0;
     bool ok[8];
     int EnZahyou[8][2];
     int StZahyou[2]; // 0:行 1:列
 
-    //isRoundStone(ok, i, j, player);
+    isRoundStone(ok, Row, Column, player);
     StZahyou[0] = Row;
     StZahyou[1] = Column;
 
     //上
-    //if (ok[0] == true)
-    //{        
-        for (k = i + 1; k < ROW; k++)
+    if (ok[0] == true)
+    {
+        for (k = i + 2; k < ROW; k++)
         {
-            if (stone[k][j].getStone() == player)
+            if (isStone[k][j])
             {
-                EnZahyou[0][0] = k;
-                EnZahyou[0][1] = j;
+                if (stone[k][j].getStone() == player)
+                {
+                    EnZahyou[0][0] = k;
+                    EnZahyou[0][1] = j;
+                    Board::UpSetStone(StZahyou, EnZahyou[0]);
+                    break;
+                }
+            }
+            else
+            {
                 break;
             }
         }
-        printf("a\n");   //こっちは表示される
-        Board::UpSetStone(StZahyou, EnZahyou[0]);
-        printf("a\n");   //こっちは表示されない
-    //}
+
+        /*if(isStone[k][j] && stone[k][j].getStone() == player){
+
+        }*/
+        printf("c\n"); //こっちは表示されない
+    }
     //右上
-    //if (ok[1] == true)
-    //{
-        k = i + 1; //行
-        l = j + 1; //列
+    if (ok[1] == true)
+    {
+        k = i + 2; //行
+        l = j + 2; //列
         while (k < ROW && l < COLUMN)
         {
             printf("%d %d\n", Row, Column);
-            if (stone[k][l].getStone() == player)
+            if (isStone[k][l])
             {
-                EnZahyou[1][0] = k;
-                EnZahyou[1][1] = l;
-                break;
+                if (stone[k][l].getStone() == player)
+                {
+                    EnZahyou[1][0] = k;
+                    EnZahyou[1][1] = l;
+                    Board::UpSetStone(StZahyou, EnZahyou[1]);
+                    break;
+                }
             }
             k++;
             l++;
         }
-        Board::UpSetStone(StZahyou, EnZahyou[1]);
-    //}
+    }
     //右
-    //if (ok[2] == true)
-    //{
-        for (k = j + 1; k < COLUMN; k++)
+    if (ok[2] == true)
+    {
+        for (k = j + 2; k < COLUMN; k++)
         {
-            printf("a\n");
-            if (stone[i][k].getStone() == player)
+            if (isStone[i][k])
             {
-                EnZahyou[2][0] = i;
-                EnZahyou[2][1] = k;
-                break;
+                if (stone[i][k].getStone() == player)
+                {
+                    EnZahyou[2][0] = i;
+                    EnZahyou[2][1] = k;
+                    Board::UpSetStone(StZahyou, EnZahyou[2]);
+                    break;
+                }
             }
         }
-        Board::UpSetStone(StZahyou, EnZahyou[2]);
-    //}
+    }
     //右下
-    //if (ok[3] == true)
-    //{
-        k = i - 1;
-        l = j + 1;
+    if (ok[3] == true)
+    {
+        k = i - 2;
+        l = j + 2;
         while (k >= 0 && l < COLUMN)
         {
-            if (stone[k][l].getStone() == player)
+            if (isStone[k][l])
             {
-                EnZahyou[3][0] = k;
-                EnZahyou[3][1] = l;
-                break;
+                if (stone[k][l].getStone() == player)
+                {
+                    EnZahyou[3][0] = k;
+                    EnZahyou[3][1] = l;
+                    Board::UpSetStone(StZahyou, EnZahyou[3]);
+                    break;
+                }
             }
-
             k--;
             l++;
         }
-        Board::UpSetStone(StZahyou, EnZahyou[3]);
-    //}
+    }
     //下
-    //if (ok[4] == true)
-    //{
-        for (k = i - 1; k >= 0; k--)
+    if (ok[4] == true)
+    {
+        for (k = i - 2; k >= 0; k--)
         {
-            if (stone[k][j].getStone() == player)
+            if (isStone[k][j])
             {
-                EnZahyou[4][0] = k;
-                EnZahyou[4][1] = j;
-                break;
+                if (stone[k][j].getStone() == player)
+                {
+                    EnZahyou[4][0] = k;
+                    EnZahyou[4][1] = j;
+                    Board::UpSetStone(StZahyou, EnZahyou[4]);
+                    break;
+                }
             }
         }
-        Board::UpSetStone(StZahyou, EnZahyou[4]);
-    //}
+    }
     //左下
-    //if (ok[5] == true)
-    //{
-        k = i - 1;
-        l = j - 1;
+    if (ok[5] == true)
+    {
+        k = i - 2;
+        l = j - 2;
         while (k >= 0 && l >= 0)
         {
-            if (stone[k][l].getStone() == player)
+            if (isStone[k][l])
             {
-                EnZahyou[2][0] = k;
-                EnZahyou[2][1] = l;
-                break;
+                if (stone[k][l].getStone() == player)
+                {
+                    EnZahyou[2][0] = k;
+                    EnZahyou[2][1] = l;
+                    Board::UpSetStone(StZahyou, EnZahyou[5]);
+                    break;
+                }
             }
-
             k--;
             l--;
         }
-        Board::UpSetStone(StZahyou, EnZahyou[5]);
-    //}
+    }
     //左
-    //if (ok[6] == true)
-    //{
-        for (k = j - 1; k >= 0; k--)
+    if (ok[6] == true)
+    {
+        for (k = j - 2; k >= 0; k--)
         {
-            if (stone[i][k].getStone() == player)
+            if (isStone[i][k])
             {
-                EnZahyou[2][0] = i;
-                EnZahyou[2][1] = k;
-                break;
+                if (stone[i][k].getStone() == player)
+                {
+                    EnZahyou[2][0] = i;
+                    EnZahyou[2][1] = k;
+                    Board::UpSetStone(StZahyou, EnZahyou[6]);
+                    break;
+                }
             }
         }
-        Board::UpSetStone(StZahyou, EnZahyou[6]);
-    //}
+    }
     //左上
-    //if (ok[7] == true)
-    //{
-        k = i + 1;
-        l = j - 1;
+    if (ok[7] == true)
+    {
+        k = i + 2;
+        l = j - 2;
         while (k < ROW && l >= 0)
         {
-            if (stone[k][l].getStone() == player)
+            if (isStone[k][l])
             {
-                EnZahyou[2][0] = k;
-                EnZahyou[2][1] = l;
-                break;
+                if (stone[k][l].getStone() == player)
+                {
+                    EnZahyou[2][0] = k;
+                    EnZahyou[2][1] = l;
+                    Board::UpSetStone(StZahyou, EnZahyou[7]);
+                    break;
+                }
             }
-
             k++;
             l--;
         }
-        Board::UpSetStone(StZahyou, EnZahyou[7]);
-    //}
+    }
 }
 
 void Board::UpSetStone(int sPoint[2], int ePoint[2])
 {
-    int i=0,j=0,k=1,loop=0;
-    int def_a=0,def_b=0;
+    int i = 0, j = 0, k = 1, loop = 0;
+    int def_a = 0, def_b = 0;
 
-    def_a=sPoint[0]-ePoint[0];
-    def_b=sPoint[1]-ePoint[1];
+    def_a = sPoint[0] - ePoint[0];
+    def_b = sPoint[1] - ePoint[1];
 
-    if(def_a==0){
-        loop=abs(def_b);
-    }else{
-        loop=abs(def_a);
+    if (def_a == 0)
+    {
+        loop = abs(def_b);
+    }
+    else
+    {
+        loop = abs(def_a);
     }
 
-    if(def_a<0){
-        i=sPoint[0];
-    }else{
-        i=ePoint[0];
+    if (def_a < 0)
+    {
+        i = sPoint[0];
+    }
+    else
+    {
+        i = ePoint[0];
     }
 
-    if(def_b<0){
-        j=sPoint[1];
-    }else{
-        j=ePoint[1];
+    if (def_b < 0)
+    {
+        j = sPoint[1];
+    }
+    else
+    {
+        j = ePoint[1];
     }
 
-    while(k<loop){
+    while (k < loop)
+    {
         stone[i][j].UpSet();
-        if(def_a!=0)i++;
-        if(def_b!=0)j++;
+        if (def_a != 0)
+            i++;
+        if (def_b != 0)
+            j++;
         k++;
     }
 }

@@ -28,9 +28,11 @@ class Game{  //ほわい
         //パス判定
         bool Pass();
         //プレイヤー交代
-        void ChangePlayer(bool player);
+        void ChangePlayer();
         //勝者を表示する
         void ShowWinner();
+        //プレイヤー名表示
+        void showPlayer();
 
 };
 #endif

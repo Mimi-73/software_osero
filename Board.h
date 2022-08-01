@@ -19,7 +19,7 @@ class Board{
         //黒石の数
         int black;
         //配置可能な石の判定 0:false 1:true
-        int canStone[ROW][COLUMN];
+        bool canStone[ROW][COLUMN];
     
     public:
         //操作
