@@ -11,6 +11,7 @@ Game::Game(){
 
 //ゲーム全体の流れをここに書き込む
 void Game::play(){
+    board.ShowBoard();
     while(!flag){
         if(!Pass()){
             board.ShowBoard();
@@ -23,7 +24,8 @@ void Game::play(){
     ShowWinner();
 }
 
-bool Game::Pass(){
+bool Game::Pass()
+{
     //狭石有無判定で、挟める石がなければターン続行不可としてpass=trueとした上で返り値trueを返す
     if(!board.isSandwichStone(player)){
         if(pass){flag = true;}
@@ -46,7 +48,9 @@ void Game::ShowWinner(){
 
     for(i = 0; i < 8; i++){
         for(j = 0; j < 8; j++){
-            if(board.getStoneOnBoard(i, j)){white += 1;} else {black += 1;}
+            if(board.getisStone(i, j) == true){
+                if(board.getStoneOnBoard(i, j)){white += 1;} else {black += 1;}
+            }
         }
     }
 
