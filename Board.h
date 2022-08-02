@@ -18,8 +18,10 @@ class Board{
         int white;
         //黒石の数
         int black;
-        //配置可能な石の判定 0:false 1:true
-        bool canStone[ROW][COLUMN];
+        //配置可能か 
+        bool canStone[ROW][COLUMN];  //true:配置可能 false:配置不可
+        //狭石端点記録
+        int LineData[8][8][8][3];  //LineData[行][列][方向0~7][端点座標 0:端点有無 1:行 2:列]
     
     public:
         //操作
@@ -30,7 +32,7 @@ class Board{
         void ShowBoard();
         //石の配置  //南
         void StonePlace(bool player);
-        //挟石有無判定  //原
+        //挟石有無判定 & 狭石端点記録
         bool isSandwichStone(bool player);
         //周りの石の判定
         void isRoundStone(bool *ok, int row, int column, bool player);

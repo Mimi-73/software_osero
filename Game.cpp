@@ -27,7 +27,7 @@ void Game::play(){
 bool Game::Pass()
 {
     //狭石有無判定で、挟める石がなければターン続行不可としてpass=trueとした上で返り値trueを返す
-    if(!board.isSandwichStone(player)){
+    if(board.isSandwichStone(player)){
         printf("パスしました\n");
         if(pass){flag = true;}
         pass=true;
