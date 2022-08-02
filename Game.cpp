@@ -55,9 +55,9 @@ void Game::ShowWinner(){
     }
 
     if(white > black){
-        printf("白の勝ちです\n");
+        printf("白●の勝ちです\n");
     } else if(white < black){
-        printf("黒の勝ちです\n");
+        printf("黒○の勝ちです\n");
     } else {
         printf("引き分けです\n");
     }
@@ -66,8 +66,8 @@ void Game::ShowWinner(){
 void Game::showPlayer()
 {
     if(player){
-        printf("白の番です\n");
+        printf("白●の番です\n");
     } else {
-        printf("黒の番です\n");
+        printf("黒○の番です\n");
     }
 }

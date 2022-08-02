@@ -73,7 +73,7 @@ void Board::ShowBoard()
 }
 
 void Board::StonePlace(bool Player)
-{
+{       
     char *cinRow, *cinColumn;
     int Row = 0, Column = 0;
 
@@ -86,14 +86,19 @@ void Board::StonePlace(bool Player)
 
         Row = atoi(cinRow); // string->int
         Column = atoi(cinColumn);
-        printf("(%d,%d)に配置\n", Row, Column); //debug
+        //printf("(%d,%d)に配置\n", Row, Column); //debug
 
-        if (((Row >= 1 && Row <= 8) && (Column >= 1 && Column <= 8)) && canStone[Row][Column]) //入力座標が盤内 && 入力座標が配置可能な位置として記録されている
+        // printf("canStone[%d][%d]:",Row,Column);
+        // if(canStone[Row-1][Column-1])printf("true.\n");
+        // if(!canStone[Row-1][Column-1])printf("false.\n");
+
+
+        if (((Row >= 1 && Row <= 8) && (Column >= 1 && Column <= 8)) && canStone[Row-1][Column-1]) //入力座標が盤内 && 入力座標が配置可能な位置として記録されている
         {
             isStone[Row - 1][Column - 1] = true;
             stone[Row - 1][Column - 1].setStone(Player);
             UpSetStone(Row - 1, Column - 1); // ひっくり返す
-            printf("(%d,%d)に配置\n", Row, Column);  //debug
+            //printf("(%d,%d)に配置\n", Row, Column);  //debug
             break;
         }
         else
@@ -110,10 +115,11 @@ bool Board::isSandwichStone(bool Player)
     int canPlaceStone = 0; //石の配置が可能な場所の数
     
 
-    // LineDataとSearchAngleの初期化
+    //各変数の初期化
     for (int i = 0; i < ROW; i++){
         SearchAngle[i]=false;
         for (int j = 0; j < COLUMN; j++){
+            canStone[i][j] = false; //初期化
             for (int k = 0; k < 8; k++){
                 LineData[i][j][k][0] = 0;
                 LineData[i][j][k][1] = 0;
@@ -124,7 +130,7 @@ bool Board::isSandwichStone(bool Player)
 
     for (int i = 0; i < ROW; i++){ //行ループ
         for (int j = 0; j < COLUMN; j++){  //列ループ
-            canStone[i][j] = false; //初期化
+            
 
             if (isStone[i][j] == true){ //指定座標に既に石がある
                 //printf("(%d,%d)には石があるよ\n", i + 1, j + 1);  //debug
@@ -136,7 +142,7 @@ bool Board::isSandwichStone(bool Player)
                     if (SearchAngle[k]){ // k=0:上 1:右上 2:右 3:右下 4:下 5:左下 6:左 7:左上
                         int searchRow = i, searchColumn = j;
 
-                        printf("search:(%d,%d) direc:%d is ",i+1,j+1,k);  //debug
+                        //printf("search:(%d,%d) direc:%d is ",i+1,j+1,k);  //debug
 
                         bool firstLoop[4] = {true,true,true,true}; // 1回目のループならtrue
                         while(true){
@@ -158,21 +164,17 @@ bool Board::isSandwichStone(bool Player)
                                 else{ searchColumn--; }
                             }
 
-                            // if(i==2&&j==2&&k==1){  //debug
-                            //     printf("search(%d,%d)\n",searchRow,searchColumn); 
-                            // }
-
                             if (searchRow <= 0 || searchRow > ROW){
-                                printf("false.(盤外行)\n");  //debug
+                                //printf("false1.(盤外行)\n");  //debug
                                 break;
                                 } //盤外の行ならbreak
                             if (searchColumn <= 0 || searchColumn > COLUMN){
-                                printf("false2.(盤外列)\n");  //debug
+                                //printf("false2.(盤外列)\n");  //debug
                                 break;
                                 } //盤外の列ならbreak
 
                             if (isStone[searchRow][searchColumn] == false){ //石がない
-                                printf("false3.\n");  //debug
+                                //printf("false3.\n");  //debug
                                 break; //その方向についての調査終了
 
                             }else if (isStone[searchRow][searchColumn] && stone[searchRow][searchColumn].getStone() == Player){ //石がある && それが自分の色
@@ -180,7 +182,7 @@ bool Board::isSandwichStone(bool Player)
                                 LineData[i][j][k][0] = 1;            //端点ありと記録
                                 LineData[i][j][k][1] = searchRow;    //端点の行を記録
                                 LineData[i][j][k][2] = searchColumn; //端点の列を記録
-                                printf("true.\n");  //debug
+                                //printf("true. (%d,%d)\n",i+1,j+1);  //debug
                                 break;                               //その方向についての調査終了
                             }
                         }
@@ -230,5 +232,36 @@ void Board::isRoundStone(bool *SearchAngle, int row, int column, bool Player)
 
 void Board::UpSetStone(int row, int column)
 {
+    int Pos[2]={0,0};  //端点{row,collunm}
 
+    for(int direction=0;direction<8;direction++){
+        int def[2]={0,0};  //2点間の差{row,colunm}
+        int loop=0;  //loop数
+        int UpSetRow=row,UpSetColumn=column;
+
+        if(LineData[row][column][direction][0]){  //その方向に端点がある
+            Pos[0]=LineData[row][column][direction][1];  //row
+            Pos[1]=LineData[row][column][direction][2];  //column
+
+            def[0]=Pos[0]-row;
+            def[1]=Pos[1]-column;
+
+            if(def[0]==0){
+                loop=abs(def[1])-1;
+            }else{
+                loop=abs(def[0])-1;
+            }
+
+            printf("UpSet(%d,%d) to (%d,%d)\n",row+1,column+1,Pos[0]+1,Pos[1]+1);  //debug
+
+            for(int i=0;i<loop;i++){
+                if(def[0]<0){UpSetRow--;}  //行間の差が負、つまりPos[0]の方が上にあるので上にシフトさせる
+                else if(def[0]>0){UpSetRow++;}  //下シフト
+                if(def[1]<0){UpSetColumn--;}  //列間の差が負、つまりPos[1]の方が左にあるので左にシフトさせる
+                else if(def[1]>0){UpSetColumn++;}  //右シフト
+
+                stone[UpSetRow][UpSetColumn].UpSet();
+            }
+        }
+    }
 }
