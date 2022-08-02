@@ -66,22 +66,25 @@ void Board::ShowBoard()
 
 void Board::StonePlace(bool Player)
 {
-    //char cinRow, cinColumn;  //？
-    int Row, Column;
+    char cinRow, cinColumn;  
+    int Row=0, Column=0;
 
     while (true)
     {
         printf("行を入力 : ");
-        scanf(" %d", &Row);
+        scanf(" %c", &cinRow);
         printf("列を入力 : ");
-        scanf(" %d", &Column);
+        scanf(" %c", &cinColumn);
+
+        Row=int(cinRow)-48;  //char->int
+        Column=int(cinColumn)-48;
 
         if (((Row >= 1 && Row <= 8) && (Column >= 1 && Column <= 8)) && canStone[Row][Column])  //入力座標が盤内 && 入力座標が配置可能な位置として記録されている
         {
             isStone[Row - 1][Column - 1] = true;
             stone[Row - 1][Column - 1].setStone(Player);
             SearchPoint(Row - 1, Column - 1, Player);  //Search->UpSetでひっくり返す
-            printf("(%d,%d)\n",Row,Column);
+            printf("(%d,%d)に配置\n",Row,Column);
             break;
         }
         else
@@ -380,7 +383,7 @@ bool Board::isSandwichStone(bool player)
             if (flag[0] || flag[1] || flag[2] || flag[3] || flag[4] || flag[5] || flag[6] || flag[7])
             {
                 canStone[i][j] = true;
-                printf("行:%d  列:%d\n", i, j);
+                printf("(%d,%d)  ", i, j);
             }
             else
             {
@@ -394,7 +397,7 @@ bool Board::isSandwichStone(bool player)
         }
     }
 
-    printf("%d\n", canPlaceStone);
+    printf("設置可能：%d箇所\n", canPlaceStone);
 
     if (canPlaceStone != 0)
     {
