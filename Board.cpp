@@ -66,42 +66,23 @@ void Board::ShowBoard()
 
 void Board::StonePlace(bool Player)
 {
-    char cinRow, cinColumn;
+    //char cinRow, cinColumn;  //？
     int Row, Column;
-    int flag1, flag2, wflag = 1;
 
-    while (wflag)
+    while (true)
     {
         printf("行を入力 : ");
-        scanf("%d", &Row);
+        scanf(" %d", &Row);
         printf("列を入力 : ");
-        scanf("%d", &Column);
+        scanf(" %d", &Column);
 
-        if ((1 <= Row <= 8) && (1 <= Column <= 8))
-        {
-            flag1 = 1;
-        }
-        else
-        {
-            flag1 = 0;
-        }
-
-        if (canStone[Row][Column])
-        {
-            flag2 = 1;
-        }
-        else
-        {
-            printf("hfhgh\n");
-            flag2 = 0;
-        }
-
-        if ((flag1 == 1) && (flag2 == 1))
+        if (((Row >= 1 && Row <= 8) && (Column >= 1 && Column <= 8)) && canStone[Row][Column])  //入力座標が盤内 && 入力座標が配置可能な位置として記録されている
         {
             isStone[Row - 1][Column - 1] = true;
             stone[Row - 1][Column - 1].setStone(Player);
-            Board::SearchPoint(Row - 1, Column - 1, Player);
-            wflag = 0;
+            SearchPoint(Row - 1, Column - 1, Player);  //Search->UpSetでひっくり返す
+            printf("(%d,%d)\n",Row,Column);
+            break;
         }
         else
         {
