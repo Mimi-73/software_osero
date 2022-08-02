@@ -28,18 +28,16 @@ class Board{
         Board();
         bool getStoneOnBoard(int Row,int Column);
         bool getisStone(int Row, int Column);
-        //盤の状態表示  南
+        //盤の状態表示
         void ShowBoard();
-        //石の配置  //南
-        void StonePlace(bool player);
+        //石を配置 & ひっくり返す
+        void StonePlace(bool Player);
         //挟石有無判定 & 狭石端点記録
-        bool isSandwichStone(bool player);
+        bool isSandwichStone(bool Player);
         //周りの石の判定
-        void isRoundStone(bool *ok, int row, int column, bool player);
-        //ひっくり返す石の座標を調べる関数
-        void SearchPoint(int Row, int Column, bool player);
+        void isRoundStone(bool *SearchAngle, int row, int column, bool Player);
         //ひっくり返す関数
-        void UpSetStone(int sPoint[2], int ePoint[2]);
+        void UpSetStone(int row, int column);
         
 };
 #endif

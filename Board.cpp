@@ -58,11 +58,11 @@ void Board::ShowBoard()
             }
             else if (stone[i][j].getStone())
             {
-                printf(" ○ "); //白
+                printf(" ● "); //白
             }
             else if (!stone[i][j].getStone())
             {
-                printf(" ● "); //黒
+                printf(" ○ "); //黒
             }
         }
 
@@ -92,8 +92,8 @@ void Board::StonePlace(bool Player)
         {
             isStone[Row - 1][Column - 1] = true;
             stone[Row - 1][Column - 1].setStone(Player);
-            SearchPoint(Row - 1, Column - 1, Player); // Search->UpSetでひっくり返す
-            printf("(%d,%d)に配置\n", Row, Column);
+            UpSetStone(Row - 1, Column - 1); // ひっくり返す
+            printf("(%d,%d)に配置\n", Row, Column);  //debug
             break;
         }
         else
@@ -101,12 +101,18 @@ void Board::StonePlace(bool Player)
             printf("不正な入力です\n");
         }
     }
+
 }
 
-bool Board::isSandwichStone(bool player)
+bool Board::isSandwichStone(bool Player)
 {
-    // LineDataの初期化
+    bool SearchAngle[8];   //調査する方向
+    int canPlaceStone = 0; //石の配置が可能な場所の数
+    
+
+    // LineDataとSearchAngleの初期化
     for (int i = 0; i < ROW; i++){
+        SearchAngle[i]=false;
         for (int j = 0; j < COLUMN; j++){
             for (int k = 0; k < 8; k++){
                 LineData[i][j][k][0] = 0;
@@ -116,64 +122,76 @@ bool Board::isSandwichStone(bool player)
         }
     }
 
-    bool SearchAngle[8];   //調査する方向
-    int canPlaceStone = 0; //石の配置が可能な場所の数
-    int searchRow = 0, searchColumn = 0;
-
     for (int i = 0; i < ROW; i++){ //行ループ
         for (int j = 0; j < COLUMN; j++){  //列ループ
             canStone[i][j] = false; //初期化
 
-            if (isStone[i][j] == true)
-            { //指定座標に既に石がある
-                printf("(%d,%d)には石があるよ\n", i + 1, j + 1);  //debug
-            }
-            else
-            {
-                isRoundStone(SearchAngle, i, j, player);
+            if (isStone[i][j] == true){ //指定座標に既に石がある
+                //printf("(%d,%d)には石があるよ\n", i + 1, j + 1);  //debug
+            
+            }else{
+                isRoundStone(SearchAngle, i, j, Player);
 
-                for (int k = 0; k < 8; k++)
-                { //各方向について調査
+                for (int k = 0; k < 8; k++){ //各方向について調査
                     if (SearchAngle[k]){ // k=0:上 1:右上 2:右 3:右下 4:下 5:左下 6:左 7:左上
+                        int searchRow = i, searchColumn = j;
 
-                        //座標シフト
-                        bool firstLoop = true; // 1回目のループならtrue
-                        if (k == 7 || k == 0 || k == 1){ //上方向への座標シフト
-                            if (firstLoop){ searchRow = i + 2; firstLoop = false; }
-                            else{ searchRow++; }
-                        }
-                        if (k == 3 || k == 4 || k == 5){ //下方向への座標シフト
-                            if (firstLoop){ searchRow = i - 2; firstLoop = false; }
-                            else{ searchRow--;}
-                        }
-                        if (k == 1 || k == 2 || k == 3){ //右方向への座標シフト
-                            if (firstLoop){ searchColumn = j + 2; firstLoop = false; }
-                            else{ searchColumn++; }
-                        }
-                        if (k == 5 || k == 6 || k == 7){ //左方向への座標シフト
-                            if (firstLoop){ searchColumn = j - 2; firstLoop = false; }
-                            else{ searchColumn--; }
-                        }
+                        printf("search:(%d,%d) direc:%d is ",i+1,j+1,k);  //debug
 
-                        if (searchRow < 0 || searchRow >= ROW)break; //盤外の行ならbreak
-                        if (searchColumn < 0 || searchColumn >= COLUMN)break; //盤外の列ならbreak
+                        bool firstLoop[4] = {true,true,true,true}; // 1回目のループならtrue
+                        while(true){
+                            //座標シフト
+                            if (k == 7 || k == 0 || k == 1){ //上方向への座標シフト
+                                if (firstLoop[0]){ searchRow -= 2; firstLoop[0] = false; }
+                                else{ searchRow--; }
+                            }
+                            if (k == 3 || k == 4 || k == 5){ //下方向への座標シフト
+                                if (firstLoop[1]){ searchRow += 2; firstLoop[1] = false; }
+                                else{ searchRow++;}
+                            }
+                            if (k == 1 || k == 2 || k == 3){ //右方向への座標シフト
+                                if (firstLoop[2]){ searchColumn += 2; firstLoop[2] = false; }
+                                else{ searchColumn++; }
+                            }
+                            if (k == 5 || k == 6 || k == 7){ //左方向への座標シフト
+                                if (firstLoop[3]){ searchColumn -= 2; firstLoop[3] = false; }
+                                else{ searchColumn--; }
+                            }
 
-                        if (isStone[searchRow][searchColumn] == false){ //石がない
-                            break; //その方向についての調査終了
+                            // if(i==2&&j==2&&k==1){  //debug
+                            //     printf("search(%d,%d)\n",searchRow,searchColumn); 
+                            // }
 
-                        }else if (isStone[searchRow][searchColumn] && stone[searchRow][searchColumn].getStone() == player){ //石がある && それが自分の色
-                            canStone[i][j] = true;               //(i,j)には石が置けるものとして記録
-                            LineData[i][j][k][0] = 1;            //端点ありと記録
-                            LineData[i][j][k][1] = searchRow;    //端点の行を記録
-                            LineData[i][j][k][2] = searchColumn; //端点の列を記録
-                            break;                               //その方向についての調査終了
+                            if (searchRow <= 0 || searchRow > ROW){
+                                printf("false.(盤外行)\n");  //debug
+                                break;
+                                } //盤外の行ならbreak
+                            if (searchColumn <= 0 || searchColumn > COLUMN){
+                                printf("false2.(盤外列)\n");  //debug
+                                break;
+                                } //盤外の列ならbreak
+
+                            if (isStone[searchRow][searchColumn] == false){ //石がない
+                                printf("false3.\n");  //debug
+                                break; //その方向についての調査終了
+
+                            }else if (isStone[searchRow][searchColumn] && stone[searchRow][searchColumn].getStone() == Player){ //石がある && それが自分の色
+                                canStone[i][j] = true;               //(i,j)には石が置けるものとして記録
+                                LineData[i][j][k][0] = 1;            //端点ありと記録
+                                LineData[i][j][k][1] = searchRow;    //端点の行を記録
+                                LineData[i][j][k][2] = searchColumn; //端点の列を記録
+                                printf("true.\n");  //debug
+                                break;                               //その方向についての調査終了
+                            }
                         }
+                        
                     }
                 } //方向ループfin
+                
             }
             if (canStone[i][j]){
                 canPlaceStone++;
-                printf("(%d,%d)  ", i + 1, j + 1);
+                //printf("(%d,%d)  ", i + 1, j + 1);  //debug
             }
         } //列ループfin
     }     //行ループfin
@@ -187,355 +205,30 @@ bool Board::isSandwichStone(bool player)
     }
 }
 
-void Board::isRoundStone(bool *SearchAngle, int i, int j, bool player)
+void Board::isRoundStone(bool *SearchAngle, int row, int column, bool Player)
 {
-    //上
-    if (i + 1 < ROW)
-    {
-        if ((isStone[i + 1][j] == true) && (stone[i + 1][j].getStone() != player))
-        {
-            SearchAngle[0] = true;
+    for(int direction=0;direction<8;direction++){  //8方向
+        int searchRow=row;
+        int searchColumn=column;
+        if(direction==7 || direction==0 || direction==1)searchRow=row-1;  //上方向への座標シフト
+        if(direction==3 || direction==4 || direction==5)searchRow=row+1;  //下方向への座標シフト
+        if(direction==1 || direction==2 || direction==3)searchColumn=column+1;  //右方向への座標シフト
+        if(direction==5 || direction==6 || direction==7)searchColumn=column-1;  //左方向への座標シフト
+
+        if((searchRow<=0 || searchRow>ROW) || (searchColumn<=0 || searchColumn>COLUMN) || isStone[searchRow][searchColumn]==false){  //盤外座標参照or石が存在しない場合はfalse
+            SearchAngle[direction]=false;
+        }else if(isStone[searchRow][searchColumn]==true && stone[searchRow][searchColumn].getStone()==Player){  //石が存在しそれが自分の色である場合もfalse
+            SearchAngle[direction]=false;
+        }else if(isStone[searchRow][searchColumn]==true && stone[searchRow][searchColumn].getStone()!=Player){  //石が存在しそれが自分の色でない場合はtrue
+            SearchAngle[direction]=true;
+        }else{
+            printf("error in isRoundStone:条件文不備\n");  //debug
         }
-        else
-        {
-            SearchAngle[0] = false;
-        }
-    }
-    else
-    {
-        SearchAngle[0] = false;
-    }
-    //右上
-    if ((i + 1 < ROW) && (j + 1 < COLUMN))
-    {
-        if ((isStone[i + 1][j + 1] == true) && (stone[i + 1][j + 1].getStone() != player))
-        {
-            SearchAngle[1] = true;
-        }
-        else
-        {
-            SearchAngle[1] = false;
-        }
-    }
-    else
-    {
-        SearchAngle[1] = false;
-    }
-    //右
-    if (j + 1 < COLUMN)
-    {
-        if ((isStone[i][j + 1] == true) && (stone[i][j + 1].getStone() != player))
-        {
-            SearchAngle[2] = true;
-        }
-        else
-        {
-            SearchAngle[2] = false;
-        }
-    }
-    else
-    {
-        SearchAngle[2] = false;
-    }
-    //右下
-    if ((i - 1 >= 0) && (j + 1 < COLUMN))
-    {
-        if ((isStone[i - 1][j + 1] == true) && (stone[i - 1][j + 1].getStone() != player))
-        {
-            SearchAngle[3] = true;
-        }
-        else
-        {
-            SearchAngle[3] = false;
-        }
-    }
-    else
-    {
-        SearchAngle[3] = false;
-    }
-    //下
-    if (i - 1 >= 0)
-    {
-        if ((isStone[i - 1][j] == true) && (stone[i - 1][j].getStone() != player))
-        {
-            SearchAngle[4] = true;
-        }
-        else
-        {
-            SearchAngle[4] = false;
-        }
-    }
-    else
-    {
-        SearchAngle[4] = false;
-    }
-    //左下
-    if ((i - 1 >= 0) && (j - 1 >= 0))
-    {
-        if ((isStone[i - 1][j - 1] == true) && (stone[i - 1][j - 1].getStone() != player))
-        {
-            SearchAngle[5] = true;
-        }
-        else
-        {
-            SearchAngle[5] = false;
-        }
-    }
-    else
-    {
-        SearchAngle[5] = false;
-    }
-    //左
-    if (j - 1 >= 0)
-    {
-        if ((isStone[i][j - 1] == true) && (stone[i][j - 1].getStone() != player))
-        {
-            SearchAngle[6] = true;
-        }
-        else
-        {
-            SearchAngle[6] = false;
-        }
-    }
-    else
-    {
-        SearchAngle[6] = false;
-    }
-    //左上
-    if ((i + 1 < ROW) && (j - 1 >= 0))
-    {
-        if ((isStone[i + 1][j - 1] == true) && (stone[i + 1][j - 1].getStone() != player))
-        {
-            SearchAngle[7] = true;
-        }
-        else
-        {
-            SearchAngle[7] = false;
-        }
-    }
-    else
-    {
-        SearchAngle[7] = false;
+
     }
 }
 
-void Board::SearchPoint(int Row, int Column, bool player)
+void Board::UpSetStone(int row, int column)
 {
-    int i, j, k, l, count = 0;
-    bool SearchAngle[8];
-    int EnZahyou[8][2];
-    int StZahyou[2]; // 0:行 1:列
 
-    isRoundStone(SearchAngle, Row, Column, player);
-    StZahyou[0] = Row;
-    StZahyou[1] = Column;
-
-    //上
-    if (SearchAngle[0] == true)
-    {
-        for (k = i + 2; k < ROW; k++)
-        {
-            if (isStone[k][j])
-            {
-                if (stone[k][j].getStone() == player)
-                {
-                    EnZahyou[0][0] = k;
-                    EnZahyou[0][1] = j;
-                    Board::UpSetStone(StZahyou, EnZahyou[0]);
-                    break;
-                }
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        /*if(isStone[k][j] && stone[k][j].getStone() == player){
-
-        }*/
-        printf("c\n"); //こっちは表示されない
-    }
-    //右上
-    if (SearchAngle[1] == true)
-    {
-        k = i + 2; //行
-        l = j + 2; //列
-        while (k < ROW && l < COLUMN)
-        {
-            printf("%d %d\n", Row, Column);
-            if (isStone[k][l])
-            {
-                if (stone[k][l].getStone() == player)
-                {
-                    EnZahyou[1][0] = k;
-                    EnZahyou[1][1] = l;
-                    Board::UpSetStone(StZahyou, EnZahyou[1]);
-                    break;
-                }
-            }
-            k++;
-            l++;
-        }
-    }
-    //右
-    if (SearchAngle[2] == true)
-    {
-        for (k = j + 2; k < COLUMN; k++)
-        {
-            if (isStone[i][k])
-            {
-                if (stone[i][k].getStone() == player)
-                {
-                    EnZahyou[2][0] = i;
-                    EnZahyou[2][1] = k;
-                    Board::UpSetStone(StZahyou, EnZahyou[2]);
-                    break;
-                }
-            }
-        }
-    }
-    //右下
-    if (SearchAngle[3] == true)
-    {
-        k = i - 2;
-        l = j + 2;
-        while (k >= 0 && l < COLUMN)
-        {
-            if (isStone[k][l])
-            {
-                if (stone[k][l].getStone() == player)
-                {
-                    EnZahyou[3][0] = k;
-                    EnZahyou[3][1] = l;
-                    Board::UpSetStone(StZahyou, EnZahyou[3]);
-                    break;
-                }
-            }
-            k--;
-            l++;
-        }
-    }
-    //下
-    if (SearchAngle[4] == true)
-    {
-        for (k = i - 2; k >= 0; k--)
-        {
-            if (isStone[k][j])
-            {
-                if (stone[k][j].getStone() == player)
-                {
-                    EnZahyou[4][0] = k;
-                    EnZahyou[4][1] = j;
-                    Board::UpSetStone(StZahyou, EnZahyou[4]);
-                    break;
-                }
-            }
-        }
-    }
-    //左下
-    if (SearchAngle[5] == true)
-    {
-        k = i - 2;
-        l = j - 2;
-        while (k >= 0 && l >= 0)
-        {
-            if (isStone[k][l])
-            {
-                if (stone[k][l].getStone() == player)
-                {
-                    EnZahyou[2][0] = k;
-                    EnZahyou[2][1] = l;
-                    Board::UpSetStone(StZahyou, EnZahyou[5]);
-                    break;
-                }
-            }
-            k--;
-            l--;
-        }
-    }
-    //左
-    if (SearchAngle[6] == true)
-    {
-        for (k = j - 2; k >= 0; k--)
-        {
-            if (isStone[i][k])
-            {
-                if (stone[i][k].getStone() == player)
-                {
-                    EnZahyou[2][0] = i;
-                    EnZahyou[2][1] = k;
-                    Board::UpSetStone(StZahyou, EnZahyou[6]);
-                    break;
-                }
-            }
-        }
-    }
-    //左上
-    if (SearchAngle[7] == true)
-    {
-        k = i + 2;
-        l = j - 2;
-        while (k < ROW && l >= 0)
-        {
-            if (isStone[k][l])
-            {
-                if (stone[k][l].getStone() == player)
-                {
-                    EnZahyou[2][0] = k;
-                    EnZahyou[2][1] = l;
-                    Board::UpSetStone(StZahyou, EnZahyou[7]);
-                    break;
-                }
-            }
-            k++;
-            l--;
-        }
-    }
-}
-
-void Board::UpSetStone(int sPoint[2], int ePoint[2])
-{
-    int i = 0, j = 0, k = 1, loop = 0;
-    int def_a = 0, def_b = 0;
-
-    def_a = sPoint[0] - ePoint[0];
-    def_b = sPoint[1] - ePoint[1];
-
-    if (def_a == 0)
-    {
-        loop = abs(def_b);
-    }
-    else
-    {
-        loop = abs(def_a);
-    }
-
-    if (def_a < 0)
-    {
-        i = sPoint[0];
-    }
-    else
-    {
-        i = ePoint[0];
-    }
-
-    if (def_b < 0)
-    {
-        j = sPoint[1];
-    }
-    else
-    {
-        j = ePoint[1];
-    }
-
-    while (k < loop)
-    {
-        stone[i][j].UpSet();
-        if (def_a != 0)
-            i++;
-        if (def_b != 0)
-            j++;
-        k++;
-    }
 }
