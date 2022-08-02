@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <cstdlib>
+#include <string>
 #include "Board.h"
 #include "Stone.h"
 
@@ -73,18 +74,19 @@ void Board::ShowBoard()
 
 void Board::StonePlace(bool Player)
 {
-    char cinRow, cinColumn;
+    char *cinRow, *cinColumn;
     int Row = 0, Column = 0;
 
     while (true)
     {
         printf("行を入力 : ");
-        scanf(" %c", &cinRow);
+        scanf(" %s", cinRow);
         printf("列を入力 : ");
-        scanf(" %c", &cinColumn);
+        scanf(" %s", cinColumn);
 
-        Row = int(cinRow) - 48; // char->int
-        Column = int(cinColumn) - 48;
+        Row = atoi(cinRow); // string->int
+        Column = atoi(cinColumn);
+        printf("(%d,%d)に配置\n", Row, Column); //debug
 
         if (((Row >= 1 && Row <= 8) && (Column >= 1 && Column <= 8)) && canStone[Row][Column]) //入力座標が盤内 && 入力座標が配置可能な位置として記録されている
         {
@@ -124,7 +126,7 @@ bool Board::isSandwichStone(bool player)
 
             if (isStone[i][j] == true)
             { //指定座標に既に石がある
-                printf("(%d,%d)には石があるよ\n", i + 1, j + 1);
+                printf("(%d,%d)には石があるよ\n", i + 1, j + 1);  //debug
             }
             else
             {
@@ -132,8 +134,7 @@ bool Board::isSandwichStone(bool player)
 
                 for (int k = 0; k < 8; k++)
                 { //各方向について調査
-                    if (SearchAngle[k])
-                    { // k=0:上 1:右上 2:右 3:右下 4:下 5:左下 6:左 7:左上
+                    if (SearchAngle[k]){ // k=0:上 1:右上 2:右 3:右下 4:下 5:左下 6:左 7:左上
 
                         //座標シフト
                         bool firstLoop = true; // 1回目のループならtrue
