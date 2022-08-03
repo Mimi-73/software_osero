@@ -21,9 +21,9 @@ Board::Board()
     }
 
     stone[3][3].setStone(true);
-    stone[4][4].setStone(false);
+    stone[4][4].setStone(true);
     stone[4][3].setStone(false);
-    stone[3][4].setStone(true);
+    stone[3][4].setStone(false);
     isStone[3][3] = isStone[4][4] = isStone[4][3] = isStone[3][4] = true;
 }
 
