@@ -26,7 +26,9 @@ class Board{
     public:
         //操作
         Board();
+        //盤の指定座標に置かれている石の色を返す
         bool getStoneOnBoard(int Row,int Column);
+        //盤の指定座標に石が置かれているか否かを返す
         bool getisStone(int Row, int Column);
         //盤の状態表示
         void ShowBoard();
