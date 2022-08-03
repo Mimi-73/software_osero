@@ -12,8 +12,8 @@ Game::Game(){
 //ゲーム全体の流れをここに書き込む
 void Game::play(){
     while(!flag){
+        board.ShowBoard();
         if(!Pass()){
-            board.ShowBoard();
             showPlayer();
             board.StonePlace(player);
         }
