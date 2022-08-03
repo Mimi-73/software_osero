@@ -20,11 +20,11 @@ Board::Board()
         }
     }
 
-    stone[0][3].setStone(true);
-    stone[0][4].setStone(false);
-    stone[1][3].setStone(false);
-    stone[1][4].setStone(true);
-    isStone[0][3] = isStone[0][4] = isStone[1][3] = isStone[1][4] = true;
+    stone[3][3].setStone(true);
+    stone[4][4].setStone(false);
+    stone[4][3].setStone(false);
+    stone[3][4].setStone(true);
+    isStone[3][3] = isStone[4][4] = isStone[4][3] = isStone[3][4] = true;
 }
 
 bool Board::getStoneOnBoard(int Row, int Column)
