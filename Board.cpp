@@ -93,17 +93,11 @@ void Board::StonePlace(bool Player)
         Column = atoi(cinColumn);
         //printf("(%d,%d)に配置\n", Row, Column); //debug
 
-        // printf("canStone[%d][%d]:",Row,Column);
-        // if(canStone[Row-1][Column-1])printf("true.\n");
-        // if(!canStone[Row-1][Column-1])printf("false.\n");
-
-
         if ((Row >= 1 && Row <= 8) && (Column >= 1 && Column <= 8)){ //入力座標が盤内
             if(canStone[Row-1][Column-1]){  //入力座標が配置可能な位置として記録されている
                 isStone[Row - 1][Column - 1] = true;
                 stone[Row - 1][Column - 1].setStone(Player);
                 UpSetStone(Row - 1, Column - 1); // ひっくり返す
-                //printf("(%d,%d)に配置\n", Row, Column);  //debug
                 break;
             }else{
                 printf("不正な入力です\n");
@@ -135,10 +129,7 @@ bool Board::isSandwichStone(bool Player)
 
     for (int i = 0; i < ROW; i++){ //行ループ
         for (int j = 0; j < COLUMN; j++){  //列ループ
-            
-
             if (isStone[i][j] == true){ //指定座標に既に石がある
-                //printf("(%d,%d)には石があるよ\n", i + 1, j + 1);  //debug
             
             }else{
                 isRoundStone(SearchAngle, i, j, Player);
@@ -147,7 +138,7 @@ bool Board::isSandwichStone(bool Player)
                     if (SearchAngle[k]){ // k=0:上 1:右上 2:右 3:右下 4:下 5:左下 6:左 7:左上
                         int searchRow = i, searchColumn = j;
 
-                        printf("search:(%d,%d) direc:%d is ",i+1,j+1,k);  //debug
+                        //printf("search:(%d,%d) direc:%d is ",i+1,j+1,k);  //debug
 
                         bool firstLoop[4] = {true,true,true,true}; // 1回目のループならtrue
                         while(true){
@@ -169,17 +160,17 @@ bool Board::isSandwichStone(bool Player)
                                 else{ searchColumn--; }
                             }
 
-                            if (searchRow <= 0 || searchRow > ROW){
-                                printf("false1.(盤外行)\n");  //debug
+                            if (searchRow < 0 || searchRow > ROW){
+                                //printf("false1.(盤外行)\n");  //debug
                                 break;
                                 } //盤外の行ならbreak
-                            if (searchColumn <= 0 || searchColumn > COLUMN){
-                                printf("false2.(盤外列)\n");  //debug
+                            if (searchColumn < 0 || searchColumn > COLUMN){
+                                //printf("false2.(盤外列)\n");  //debug
                                 break;
                                 } //盤外の列ならbreak
 
                             if (isStone[searchRow][searchColumn] == false){ //石がない
-                                printf("false3.\n");  //debug
+                                //printf("false3.\n");  //debug
                                 break; //その方向についての調査終了
 
                             }else if (isStone[searchRow][searchColumn] && stone[searchRow][searchColumn].getStone() == Player){ //石がある && それが自分の色
@@ -187,7 +178,7 @@ bool Board::isSandwichStone(bool Player)
                                 LineData[i][j][k][0] = 1;            //端点ありと記録
                                 LineData[i][j][k][1] = searchRow;    //端点の行を記録
                                 LineData[i][j][k][2] = searchColumn; //端点の列を記録
-                                printf("true. (%d,%d)\n",i+1,j+1);  //debug
+                                //printf("true. (%d,%d)\n",i+1,j+1);  //debug
                                 break;                               //その方向についての調査終了
                             }
                         }
@@ -198,7 +189,7 @@ bool Board::isSandwichStone(bool Player)
             }
             if (canStone[i][j]){
                 canPlaceStone++;
-                //printf("(%d,%d)  ", i + 1, j + 1);  //debug
+                printf("(%d,%d)  ", i + 1, j + 1);  //debug
             }
         } //列ループfin
     }     //行ループfin
@@ -215,6 +206,7 @@ bool Board::isSandwichStone(bool Player)
 void Board::isRoundStone(bool *SearchAngle, int row, int column, bool Player)
 {
     for(int direction=0;direction<8;direction++){  //8方向
+        
         int searchRow=row;
         int searchColumn=column;
         if(direction==7 || direction==0 || direction==1)searchRow=row-1;  //上方向への座標シフト
@@ -222,17 +214,23 @@ void Board::isRoundStone(bool *SearchAngle, int row, int column, bool Player)
         if(direction==1 || direction==2 || direction==3)searchColumn=column+1;  //右方向への座標シフト
         if(direction==5 || direction==6 || direction==7)searchColumn=column-1;  //左方向への座標シフト
 
-        if((searchRow<=0 || searchRow>ROW) || (searchColumn<=0 || searchColumn>COLUMN)){  //盤外座標参照のときfalse
+        //if(row==0 && column==5)printf("(%d,%d) direc:%d (%d,%d)",row+1,column+1,direction,searchRow+1,searchColumn+1);  //debug
+
+        if((searchRow<0 || searchRow>=ROW) || (searchColumn<0 && searchColumn>=COLUMN)){  //盤外座標参照のときfalse
             SearchAngle[direction]=false;
+            //if(row==0 && column==5)printf("is false. (盤外参照)\n");
         }else{
             if(isStone[searchRow][searchColumn]==false){  //石が存在しないときfalse
                 SearchAngle[direction]=false;
+                //if(row==0 && column==5)printf("is false. (石無し)\n");
             }else if(isStone[searchRow][searchColumn]==true && stone[searchRow][searchColumn].getStone()==Player){  //石が存在しそれが自分の色である場合もfalse
                 SearchAngle[direction]=false;
+                //if(row==0 && column==5)printf("is false. (自色)\n");
             }else if(isStone[searchRow][searchColumn]==true && stone[searchRow][searchColumn].getStone()!=Player){  //石が存在しそれが自分の色でない場合はtrue
                 SearchAngle[direction]=true;
+                //if(row==0 && column==5)printf("is true.\n");
             }else{
-                printf("error in isRoundStone:条件文不備\n");  //debug
+                //if(row==0 && column==5)printf("is error in isRoundStone:条件文不備\n");  //debug
             }
         }
 
