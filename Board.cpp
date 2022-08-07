@@ -63,7 +63,7 @@ void Board::ShowBoard()
 
 void Board::StonePlace(bool Player)
 {       
-    char *cinRow=0, *cinColumn=0;
+    char *cinRow, *cinColumn;
     int Row = 0, Column = 0;
 
     while (true){
